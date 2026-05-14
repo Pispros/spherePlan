@@ -75,7 +75,6 @@ Consulte le fichier `CONTRIBUTING.md` du projet (s'il existe) pour les règles e
 ## Liens utiles
 
 - Site de l'app : https://spherenote.space  
-- NaanoCorp : https://naanocorp.com  
 - Contact : https://naanocorp.com/contact-us/  
 - GitHub : https://github.com/Pispros/spherePlan
 

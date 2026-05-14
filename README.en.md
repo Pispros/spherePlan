@@ -75,7 +75,6 @@ See `CONTRIBUTING.md` if present for contribution guidelines.
 ## Useful links
 
 - App: https://spherenote.space  
-- NaanoCorp: https://naanocorp.com  
 - Contact: https://naanocorp.com/contact-us/  
 - GitHub: https://github.com/Pispros/spherePlan
 
