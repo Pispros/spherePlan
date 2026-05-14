@@ -8,7 +8,6 @@
 SpherePlan is an open-source desktop application (MIT license) designed to turn a raw idea into a visual, actionable roadmap. It targets makers, freelancers, students and product teams who want to plan projects quickly without relying on a cloud service or user account.
 
 Official site: https://spherenote.space  
-Source code: https://github.com/Pispros/spherePlan
 
 ## Key features
 
