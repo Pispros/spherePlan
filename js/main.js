@@ -541,6 +541,15 @@ function initDetailPanel() {
   initParallax();
   initNotes();
 
+  if (!isElectronRuntime()) {
+    const settingsBackdrop = $("#settingsBackdrop");
+    if (settingsBackdrop) {
+      settingsBackdrop.classList.remove("open");
+      settingsBackdrop.style.display = "none";
+      settingsBackdrop.setAttribute("aria-hidden", "true");
+    }
+  }
+
   // Provider UI
   updateProviderBtn();
   renderProviderMenu();

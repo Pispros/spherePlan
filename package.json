@@ -1,8 +1,8 @@
 {
-  "name": "sphereplan",
+  "name": "spherenote",
   "version": "1.0.0",
   "description": "Sphere Project Planner - Application de planification de projet avec IA",
-  "homepage": "https://naanocorp.tech",
+  "homepage": "https://spherenote.space",
   "main": "main.js",
   "scripts": {
     "icons": "electron-icon-builder --input=./assets/logot.png --output=./assets --flatten",

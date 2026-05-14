@@ -111,6 +111,10 @@ function initQuickSettingsButtons() {
   const configureLLMsBtn = $("#configureLLMsBtn");
   const fullSettingsBtn = $("#fullSettingsBtn");
 
+  if (configureLLMsBtn && !isElectronRuntime()) {
+    configureLLMsBtn.style.display = "none";
+  }
+
   // Importer projet
   if (quickImportBtn) {
     quickImportBtn.addEventListener("click", () => {

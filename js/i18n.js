@@ -263,7 +263,7 @@ const TRANSLATIONS = {
       "Saisis ta clé API et l'identifiant du modèle pour chaque fournisseur. Les clés sont chiffrées (AES-GCM) et stockées localement.",
     securityWarning: "Sécurité :",
     securityText:
-      "les clés sont chiffrées avant stockage local, mais le code source contient le sel et la passphrase. Cette protection est de l'obfuscation. Ne pas utiliser sur un appareil partagé sans modifier",
+      "les clés sont chiffrées avant stockage local, mais le code source contient le sel et la passphrase. Cette protection est de l'obfuscation.",
     securityText2: "ENCRYPTION_SALT et ENCRYPTION_PASSPHRASE dans crypto.js.",
     providerAnthropic: "Anthropic - Claude",
     providerOpenAI: "OpenAI - GPT",
@@ -291,6 +291,8 @@ const TRANSLATIONS = {
     toastAtLeastOne: "Au moins une tâche est requise",
     toastGiveName: "Donne un nom à ton projet",
     toastDescribeObjective: "Décris ton objectif",
+    llmSettingsElectronOnly:
+      "Configuration LLM disponible uniquement dans l'application Desktop",
     // Prompt dock
     promptPlaceholder: "Décris un objectif et l'IA construira la roadmap…",
     generate: "Générer",
@@ -577,7 +579,7 @@ const TRANSLATIONS = {
       "Enter your API key and model identifier for each provider. Keys are encrypted (AES-GCM) and stored locally.",
     securityWarning: "Security:",
     securityText:
-      "keys are encrypted before local storage, but the source code contains the salt and passphrase. This protection is obfuscation. Do not use on a shared device without modifying",
+      "keys are encrypted before local storage, but the source code contains the salt and passphrase. This protection is obfuscation.",
     securityText2: "ENCRYPTION_SALT and ENCRYPTION_PASSPHRASE in crypto.js.",
     providerAnthropic: "Anthropic - Claude",
     providerOpenAI: "OpenAI - GPT",
@@ -605,6 +607,8 @@ const TRANSLATIONS = {
     toastAtLeastOne: "At least one task is required",
     toastGiveName: "Give your project a name",
     toastDescribeObjective: "Describe your objective",
+    llmSettingsElectronOnly:
+      "LLM settings are available only in the Desktop app",
     // Prompt dock
     promptPlaceholder: "Describe a goal and the AI will build the roadmap…",
     generate: "Generate",
@@ -1003,7 +1007,7 @@ function updateModalTranslations() {
   if (settingsTitle) settingsTitle.textContent = t("aiProviders");
   if (settingsSubtitle) settingsSubtitle.textContent = t("settingsSubtitle");
   if (settingsWarning) {
-    settingsWarning.innerHTML = `<b>${t("securityWarning")}</b> ${t("securityText")} <code style="font-family:var(--font-mono);font-size:11px;">ENCRYPTION_SALT</code> et <code style="font-family:var(--font-mono);font-size:11px;">ENCRYPTION_PASSPHRASE</code> ${t("securityText2")}`;
+    settingsWarning.innerHTML = `<b>${t("securityWarning")}</b> ${t("securityText")}`;
   }
   if (settingsFootInfo) settingsFootInfo.textContent = t("keysNeverLeave");
   if (settingsCloseBtn) settingsCloseBtn.textContent = t("close");

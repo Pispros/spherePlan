@@ -37,6 +37,10 @@ function configuredProviders() {
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 
+function isElectronRuntime() {
+  return !!window.electronAPI;
+}
+
 /* ─── HELPERS ───────────────────────────────────────────────────────── */
 function uid(prefix = "id") {
   return (

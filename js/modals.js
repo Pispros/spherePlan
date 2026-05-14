@@ -598,6 +598,11 @@ function renderReexplorePreview() {
 
 /* ─── SETTINGS MODAL ────────────────────────────────────────────────── */
 function openSettings() {
+  if (!isElectronRuntime()) {
+    showToast(t("llmSettingsElectronOnly"), "error");
+    return;
+  }
+
   Object.entries(PROVIDERS).forEach(([key, prov]) => {
     const card = document.querySelector(
       `.provider-card[data-provider="${key}"]`,
