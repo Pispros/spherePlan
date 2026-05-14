@@ -58,7 +58,7 @@ linux:
     - target: deb
       arch:
         - x64
-  icon: assets/fav-web-2.png
+  icon: assets/icon.png
   category: Utility
   maintainer: NaanoCorp <contact@naanocorp.com>
   synopsis: AI-powered project planning application
