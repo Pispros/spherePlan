@@ -1,0 +1,86 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+out/
+release/
+*.exe
+*.dmg
+*.AppImage
+*.deb
+*.rpm
+*.msi
+*.zip
+*.tar.gz
+
+# Runtime data
+.DS_Store
+Thumbs.db
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+desktop.ini
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Electron
+electron-builder.yaml
+electron-builder.env
+
+# Application specific
+assets/icon.ico
+assets/icon.icns
+assets/icon.png
+assets/icon_small.png
+assets/icon_tiny.png
+assets/icon_micro.png
+assets/icon_nano.png
+
+# Development
+.cache/
+.sass-cache/
+*.css.map
+*.js.map
+
+# Testing
+coverage/
+.nyc_output/
+
+# Package manager specific
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+shrinkwrap.yaml
+
+# Logs
+logs/

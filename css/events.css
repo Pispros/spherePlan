@@ -1,0 +1,459 @@
+/* ── Events Panel ── */
+.events-panel {
+    margin-top: 16px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+}
+.events-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.events-panel-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--fg-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.events-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--fg-dim);
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: var(--r-sm);
+    transition:
+        background 0.15s,
+        color 0.15s;
+}
+.events-add-btn:hover {
+    background: var(--bg-hover);
+    color: var(--fg);
+}
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.event-item {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    padding: 10px 12px;
+    position: relative;
+    transition: border-color 0.15s;
+}
+.event-item:hover {
+    border-color: var(--border-strong);
+}
+.event-item-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.event-item-name {
+    flex: 1;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--fg);
+    background: none;
+    border: none;
+    outline: none;
+    font-family: var(--font-sans);
+    padding: 0;
+}
+.event-item-name:focus {
+    color: var(--fg);
+}
+.event-type-badge {
+    font-size: 9px;
+    font-family: var(--font-mono);
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--bg-3);
+    color: var(--fg-faint);
+    flex-shrink: 0;
+}
+.event-type-badge.text {
+    background: rgba(94, 234, 212, 0.1);
+    color: var(--cyan);
+}
+.event-type-badge.handwritten {
+    background: rgba(167, 139, 250, 0.1);
+    color: var(--violet);
+}
+.event-item-actions {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+}
+.event-action-btn {
+    width: 22px;
+    height: 22px;
+    background: none;
+    border: none;
+    color: var(--fg-faint);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.15s,
+        color 0.15s;
+}
+.event-action-btn:hover {
+    background: var(--bg-hover);
+    color: var(--fg);
+}
+.event-action-btn.danger:hover {
+    background: rgba(255, 107, 157, 0.1);
+    color: var(--pink);
+}
+.event-action-btn svg {
+    width: 10px;
+    height: 10px;
+}
+.event-description {
+    font-size: 11.5px;
+    color: var(--fg-dim);
+    line-height: 1.5;
+    margin-top: 4px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.event-handwritten-preview {
+    margin-top: 6px;
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: #0d0d11;
+    max-height: 80px;
+    cursor: pointer;
+}
+.event-handwritten-preview canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.event-empty {
+    font-size: 11.5px;
+    color: var(--fg-faint);
+    font-style: italic;
+    padding: 6px 0;
+    text-align: center;
+}
+
+/* ── Event Modal — generously sized for the notebook ── */
+.modal.notebook-mode {
+    width: 96vw;
+    max-width: 1400px;
+    height: 92vh;
+    max-height: 92vh;
+}
+.modal.notebook-mode .modal-body {
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+.modal.notebook-mode .event-tab-content.active {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+.modal.notebook-mode #tabText.active .field {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+.modal.notebook-mode #tabText.active .field-textarea {
+    flex: 1 1 auto;
+    min-height: 240px;
+    resize: none;
+}
+
+.event-modal-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+.event-tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--fg-dim);
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 8px 12px;
+    transition:
+        color 0.15s,
+        border-color 0.15s;
+    margin-bottom: -1px;
+}
+.event-tab-btn.active {
+    color: var(--fg);
+    border-bottom-color: var(--pink);
+}
+.event-tab-btn:hover {
+    color: var(--fg);
+}
+.event-tab-content {
+    display: none;
+}
+.event-tab-content.active {
+    display: block;
+}
+
+/* ── Notebook Canvas — DARK, OneNote-like ── */
+.notebook-wrapper {
+    position: relative;
+    border-radius: var(--r-md);
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    background: #0d0d11;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 320px;
+}
+
+/* Notebook-only fullscreen — pins the WRAPPER over the entire viewport.
+   The modal underneath stays mounted but is visually replaced. */
+.notebook-wrapper.fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    background: #0d0d11;
+}
+
+/* When fullscreen is active, hide the dimming backdrop so the modal
+   underneath doesn't bleed through. Also stops the modal-foot from
+   accidentally being clickable behind the notebook. */
+body.nb-fullscreen-active .modal-backdrop {
+    background: transparent;
+    backdrop-filter: none;
+}
+
+/* Toggle the fullscreen button icon based on state */
+.notebook-fullscreen-btn .icon-compress {
+    display: none;
+}
+.notebook-wrapper.fullscreen .notebook-fullscreen-btn .icon-expand {
+    display: none;
+}
+.notebook-wrapper.fullscreen .notebook-fullscreen-btn .icon-compress {
+    display: block;
+}
+
+.notebook-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    background: #0d0d11;
+    overscroll-behavior: contain;
+}
+
+.notebook-paper {
+    position: relative;
+    background: #0d0d11;
+    /* width / height set by JS */
+}
+
+/* CRITICAL: touch-action: none on the canvas means JS controls everything.
+   The browser does NOT try to interpret touches as scroll or zoom. JS then
+   distinguishes pen (draws) from finger (pans the parent .notebook-scroll
+   manually). This is what gives OneNote / Apple Pencil-like behavior:
+     - pen always draws, even though the canvas is scrollable
+     - finger always pans, never draws
+*/
+.notebook-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    touch-action: none;
+    -ms-touch-action: none;
+    cursor: crosshair;
+    background: transparent;
+}
+
+.notebook-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 31px,
+        rgba(180, 200, 230, 0.1) 31px,
+        rgba(180, 200, 230, 0.1) 32px
+    );
+    background-size: 100% 32px;
+    background-position: 0 8px;
+}
+.notebook-margin {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 44px;
+    width: 1px;
+    background: rgba(255, 107, 157, 0.22);
+    pointer-events: none;
+}
+
+.notebook-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+.notebook-tool-btn {
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--fg-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.15s,
+        color 0.15s,
+        border-color 0.15s;
+    font-size: 11px;
+    cursor: pointer;
+}
+.notebook-tool-btn:hover {
+    background: var(--bg-hover);
+    color: var(--fg);
+}
+.notebook-tool-btn.active {
+    background: rgba(255, 107, 157, 0.12);
+    border-color: rgba(255, 107, 157, 0.4);
+    color: var(--pink);
+}
+.notebook-color-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition:
+        transform 0.15s,
+        border-color 0.15s;
+    flex-shrink: 0;
+}
+.notebook-color-btn:hover {
+    transform: scale(1.2);
+}
+.notebook-color-btn.active {
+    border-color: var(--fg);
+}
+
+.notebook-size-presets {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+.notebook-size-btn {
+    width: 26px;
+    height: 26px;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: var(--r-sm);
+    color: var(--fg-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.15s,
+        border-color 0.15s;
+    cursor: pointer;
+    padding: 0;
+}
+.notebook-size-btn:hover {
+    background: var(--bg-hover);
+}
+.notebook-size-btn.active {
+    background: rgba(255, 107, 157, 0.12);
+    border-color: rgba(255, 107, 157, 0.4);
+}
+.notebook-size-btn .nb-size-dot {
+    display: block;
+    border-radius: 50%;
+    background: var(--fg);
+}
+.notebook-size-btn.active .nb-size-dot {
+    background: var(--pink);
+}
+
+.notebook-size-slider {
+    width: 70px;
+    height: 4px;
+    accent-color: var(--pink);
+    cursor: pointer;
+}
+.notebook-toolbar-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+}
+.notebook-clear-btn {
+    background: none;
+    border: none;
+    color: var(--fg-faint);
+    font-size: 10.5px;
+    padding: 3px 8px;
+    border-radius: var(--r-sm);
+    transition:
+        background 0.15s,
+        color 0.15s;
+    cursor: pointer;
+}
+.notebook-clear-btn:hover {
+    background: rgba(255, 107, 157, 0.1);
+    color: var(--pink);
+}
+
+/* Fullscreen button — pushed to the right of the toolbar */
+.notebook-fullscreen-btn {
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    color: var(--fg-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.15s,
+        color 0.15s,
+        border-color 0.15s;
+    cursor: pointer;
+}
+.notebook-fullscreen-btn:hover {
+    background: var(--bg-hover);
+    color: var(--fg);
+    border-color: var(--border-vivid);
+}

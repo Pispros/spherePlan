@@ -1,0 +1,1595 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Sphere — Project Planner</title>
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="assets/fav-web-2.png"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@300;400;500&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="css/base.css" />
+        <link rel="stylesheet" href="css/layout.css" />
+        <link rel="stylesheet" href="css/nodes.css" />
+        <link rel="stylesheet" href="css/edges.css" />
+        <link rel="stylesheet" href="css/modals.css" />
+        <link rel="stylesheet" href="css/ui.css" />
+        <link rel="stylesheet" href="css/events.css" />
+        <link rel="stylesheet" href="css/notes.css" />
+        <link rel="stylesheet" href="css/lang.css" />
+        <link rel="stylesheet" href="css/cloud-sync.css" />
+    </head>
+    <body>
+        <div class="stage" aria-hidden="true">
+            <div class="ambient-glow pink"></div>
+            <div class="ambient-glow cyan"></div>
+            <div class="stars" id="stars"></div>
+            <div class="stars-bright"></div>
+        </div>
+        <header class="topbar">
+            <div class="brand">
+                <img class="logo-mark" src="./assets/logo.png" />
+                <!--<div class="brand-mark"></div>-->
+                <span>SpherePlan</span>
+                <span class="brand-divider">/</span>
+                <button class="project-switch" id="projectSwitch" disabled>
+                    <span
+                        class="project-item-mark"
+                        id="currentMark"
+                        style="background: var(--fg-faint)"
+                    ></span>
+                    <span id="currentProjectName">Aucun projet</span>
+                    <svg class="chev" viewBox="0 0 12 12" fill="none">
+                        <path
+                            d="M3 4.5l3 3 3-3"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </button>
+                <button
+                    class="project-sync-btn"
+                    id="projectSyncBtn"
+                    title="Synchroniser ce projet"
+                >
+                    <svg viewBox="0 0 14 14" fill="none">
+                        <path
+                            d="M2 7a5 5 0 0 1 8.66-3.4M12 7a5 5 0 0 1-8.66 3.4"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M9 1.6V3.8h2.2M5 12.4v-2.2H2.8"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </button>
+            </div>
+            <div class="top-actions">
+                <div
+                    class="cloud-sync-indicator"
+                    id="cloudSyncIndicator"
+                    style="display: none"
+                    title="Synchronisation en cours…"
+                >
+                    <svg
+                        class="cloud-sync-icon-no-animation"
+                        viewBox="0 0 14 14"
+                        fill="none"
+                    >
+                        <path
+                            d="M3.5 9.5a2.8 2.8 0 0 1-.5-5.55A4 4 0 0 1 10.7 4.5h.05a2.5 2.5 0 0 1 .25 5"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            class="cloud-sync-arrow"
+                            d="M7 6.5v4.5M5 8.5l2-2 2 2"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span class="cloud-sync-pct" id="cloudSyncPct">0%</span>
+                </div>
+                <div class="lang-switcher">
+                    <button class="lang-btn active" data-lang="fr">FR</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                </div>
+                <span class="ai-pill"><span class="dot"></span>IA active</span>
+
+                <button class="btn btn-primary" id="newProjectBtn">
+                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                        <path
+                            d="M6 2v8M2 6h8"
+                            stroke="currentColor"
+                            stroke-width="1.4"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                    Nouveau projet
+                </button>
+                <button
+                    class="icon-btn"
+                    id="quickSettingsBtn"
+                    title="Paramètres rapides"
+                    data-i18n-title="quickSettingsTitle"
+                >
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        style="width: 35px !important; height: 35px !important"
+                    >
+                        <path
+                            d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </button>
+                <input
+                    type="file"
+                    id="importFileInput"
+                    accept=".json"
+                    style="display: none"
+                />
+                <div
+                    class="window-controls"
+                    id="windowControls"
+                    style="display: none"
+                >
+                    <button
+                        class="window-control-btn"
+                        id="windowMinimize"
+                        title="Réduire"
+                    >
+                        <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M2 6h8"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        class="window-control-btn"
+                        id="windowMaximize"
+                        title="Agrandir"
+                    >
+                        <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 3v6h6V3H3z"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        class="window-control-btn window-control-close"
+                        id="windowClose"
+                        title="Fermer"
+                    >
+                        <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 3l6 6M9 3l-6 6"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <div class="project-menu" id="projectMenu"></div>
+        <aside class="legend" id="legend">
+            <div class="legend-title">Liaisons</div>
+            <div class="legend-row">
+                <span class="legend-line solid"></span><span>Sequentielle</span>
+            </div>
+            <div class="legend-row">
+                <span class="legend-line dashed"></span><span>Parallele</span>
+            </div>
+            <div class="legend-row">
+                <span class="legend-line critical"></span><span>Critique</span>
+            </div>
+            <div class="legend-row">
+                <span class="legend-line optional"></span
+                ><span>Optionnelle</span>
+            </div>
+        </aside>
+        <div class="hints" id="hints">
+            <span><kbd>Drag handle</kbd>Creer un lien</span>
+            <span><kbd>Suppr</kbd>Effacer</span>
+            <span><kbd>Esc</kbd>Deselectionner</span>
+        </div>
+        <div class="canvas" id="canvas">
+            <div class="world" id="world">
+                <svg class="connections" id="connections"></svg>
+                <div id="nodes"></div>
+            </div>
+            <div class="empty-state" id="emptyState">
+                <div class="empty-state-inner">
+                    <div class="empty-mark">
+                        <svg viewBox="0 0 28 28" fill="none">
+                            <circle
+                                cx="6"
+                                cy="14"
+                                r="3"
+                                fill="currentColor"
+                                opacity="0.4"
+                            />
+                            <circle
+                                cx="14"
+                                cy="6"
+                                r="2.5"
+                                fill="currentColor"
+                                opacity="0.7"
+                            />
+                            <circle cx="22" cy="14" r="3" fill="currentColor" />
+                            <circle
+                                cx="14"
+                                cy="22"
+                                r="2.5"
+                                fill="currentColor"
+                                opacity="0.5"
+                            />
+                            <path
+                                d="M6 14L14 6M14 6L22 14M22 14L14 22M14 22L6 14"
+                                stroke="currentColor"
+                                stroke-width="0.8"
+                                opacity="0.4"
+                            />
+                        </svg>
+                    </div>
+                    <h2 class="empty-title">
+                        Construis ta premiere constellation
+                    </h2>
+                    <p class="empty-desc">
+                        Donne un objectif a l'IA et recois une roadmap visuelle
+                        de taches connectees, avec dates, ressources et
+                        dependances.
+                    </p>
+                    <button class="empty-cta" id="emptyCta">
+                        <svg class="plus" viewBox="0 0 16 16" fill="none">
+                            <path
+                                d="M8 3v10M3 8h10"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                        Creer un projet
+                    </button>
+                </div>
+            </div>
+        </div>
+        <aside class="detail-panel" id="detailPanel" aria-hidden="true">
+            <div class="detail-head">
+                <div class="detail-eyebrow">
+                    <span class="detail-cat" id="detailCat">-</span>
+                    <div class="detail-actions">
+                        <button
+                            class="detail-icon-btn"
+                            id="detailDelete"
+                            title="Supprimer"
+                        >
+                            <svg viewBox="0 0 12 12" fill="none">
+                                <path
+                                    d="M3 4h6m-1 0v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4M5 4V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5V4"
+                                    stroke="currentColor"
+                                    stroke-width="1.1"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        </button>
+                        <button
+                            class="detail-icon-btn"
+                            id="detailClose"
+                            title="Fermer"
+                        >
+                            <svg viewBox="0 0 12 12" fill="none">
+                                <path
+                                    d="M3 3l6 6M9 3l-6 6"
+                                    stroke="currentColor"
+                                    stroke-width="1.2"
+                                    stroke-linecap="round"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-body" id="detailBody"></div>
+            <div class="reexplore">
+                <button class="reexplore-btn" id="reexploreBtn">
+                    <svg viewBox="0 0 14 14" fill="none">
+                        <path
+                            d="M2 7a5 5 0 0 1 9-3M12 7a5 5 0 0 1-9 3M11 1v3h-3M3 13v-3h3"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    Reexplorer cette etape avec l'IA
+                </button>
+            </div>
+        </aside>
+        <aside class="detail-panel" id="projectEditPanel" aria-hidden="true">
+            <div class="detail-head">
+                <div class="detail-eyebrow">
+                    <span class="detail-cat">Projet</span>
+                    <div class="detail-actions">
+                        <button
+                            class="detail-icon-btn"
+                            id="projectEditClose"
+                            title="Fermer"
+                        >
+                            <svg viewBox="0 0 12 12" fill="none">
+                                <path
+                                    d="M3 3l6 6M9 3l-6 6"
+                                    stroke="currentColor"
+                                    stroke-width="1.2"
+                                    stroke-linecap="round"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <h2 class="detail-title" id="projectEditTitle">
+                    Édition projet
+                </h2>
+            </div>
+            <div class="detail-body" id="projectEditBody">
+                <div class="field">
+                    <label class="field-label">Titre</label>
+                    <input
+                        class="field-input"
+                        id="projectEditName"
+                        type="text"
+                        placeholder="Ex. Lancer mon SaaS..."
+                        data-edit="name"
+                    />
+                </div>
+                <div class="field">
+                    <label class="field-label">Description</label>
+                    <textarea
+                        class="field-textarea"
+                        id="projectEditDescription"
+                        placeholder="Description du projet..."
+                        rows="3"
+                        data-edit="description"
+                    ></textarea>
+                </div>
+                <div class="detail-section">
+                    <h3 class="detail-section-title">Informations</h3>
+                    <div class="detail-info-grid">
+                        <div class="detail-info-item">
+                            <span class="detail-info-label">Fournisseur</span>
+                            <span
+                                class="detail-info-value"
+                                id="projectEditProvider"
+                                >-</span
+                            >
+                        </div>
+                        <div class="detail-info-item">
+                            <span class="detail-info-label">Modèle</span>
+                            <span
+                                class="detail-info-value"
+                                id="projectEditModelDisplay"
+                                >-</span
+                            >
+                        </div>
+                        <div class="detail-info-item">
+                            <span class="detail-info-label">Tâches</span>
+                            <span
+                                class="detail-info-value"
+                                id="projectEditTaskCount"
+                                >0</span
+                            >
+                        </div>
+                        <div class="detail-info-item">
+                            <span class="detail-info-label">Liens</span>
+                            <span
+                                class="detail-info-value"
+                                id="projectEditEdgeCount"
+                                >0</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <button class="add-node-fab" id="addNodeFab">
+            <span class="plus"
+                ><svg viewBox="0 0 12 12" fill="none">
+                    <path
+                        d="M6 2v8M2 6h8"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                    /></svg
+            ></span>
+            Ajouter une tache
+            <kbd>N</kbd>
+        </button>
+        <button class="notes-fab" id="notesFab" title="Notes">
+            <span class="notes-fab-icon">
+                <svg viewBox="0 0 14 14" fill="none">
+                    <path
+                        d="M3 1.5h6.5L11.5 3.5V12a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 .5-.5z"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M9 1.5V3.5h2.5"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        stroke-linejoin="round"
+                    />
+                    <path
+                        d="M4.5 6h5M4.5 8h5M4.5 10h3"
+                        stroke="currentColor"
+                        stroke-width="1.1"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </span>
+            <span class="notes-fab-label">Notes</span>
+        </button>
+        <div class="edge-popover" id="edgePopover">
+            <button class="edge-popover-btn" data-type="solid">
+                <span class="swatch"></span>Sequence
+            </button>
+            <button class="edge-popover-btn" data-type="dashed">
+                <span class="swatch"></span>Parallele
+            </button>
+            <button class="edge-popover-btn" data-type="critical">
+                <span class="swatch"></span>Critique
+            </button>
+            <button class="edge-popover-btn" data-type="optional">
+                <span class="swatch"></span>Option
+            </button>
+            <span class="edge-popover-divider"></span>
+            <button
+                class="edge-popover-btn danger"
+                id="deleteEdgeBtn"
+                title="Supprimer"
+            >
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                    <path
+                        d="M3 4h6m-1 0v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4M5 4V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5V4"
+                        stroke="currentColor"
+                        stroke-width="1.1"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+                </svg>
+            </button>
+        </div>
+        <div class="zoom-ctrl" id="zoomCtrl">
+            <button class="zoom-btn" id="zoomIn">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                        d="M6 2v8M2 6h8"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </button>
+            <div class="zoom-level" id="zoomLevel">100%</div>
+            <button class="zoom-btn" id="zoomOut">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path
+                        d="M2 6h8"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </button>
+            <button class="zoom-btn" id="zoomReset">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <circle
+                        cx="6"
+                        cy="6"
+                        r="2"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                    />
+                    <path
+                        d="M6 1v1.5M6 9.5V11M1 6h1.5M9.5 6H11"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </button>
+        </div>
+        <div class="prompt-dock">
+            <div class="prompt-shell">
+                <div class="prompt-row">
+                    <span class="prompt-icon"
+                        ><svg viewBox="0 0 14 14" fill="none">
+                            <path
+                                d="M7 1l1.5 4.5L13 7l-4.5 1.5L7 13l-1.5-4.5L1 7l4.5-1.5L7 1z"
+                                fill="currentColor"
+                            /></svg
+                    ></span>
+                    <input
+                        class="prompt-input"
+                        id="promptInput"
+                        placeholder="Decris un objectif et l'IA construira la roadmap..."
+                    />
+                    <button class="prompt-send" id="promptSend">
+                        Generer <kbd>Enter</kbd>
+                    </button>
+                </div>
+                <div class="prompt-foot">
+                    <div class="prompt-suggestions">
+                        <button class="suggest">
+                            Lancer un MVP en 30 jours
+                        </button>
+                        <button class="suggest">Apprendre Rust</button>
+                        <button class="suggest">Marathon en 6 mois</button>
+                    </div>
+                    <div class="model-selector">
+                        <button class="model-btn" id="modelBtn">
+                            <span class="model-mark"></span>
+                            <span id="modelBtnLabel">Aucun fournisseur</span>
+                            <svg class="chev" viewBox="0 0 12 12" fill="none">
+                                <path
+                                    d="M3 4.5l3 3 3-3"
+                                    stroke="currentColor"
+                                    stroke-width="1.2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                        </button>
+                        <div class="model-menu" id="modelMenu"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop" id="newProjectBackdrop">
+            <div class="modal" role="dialog" aria-labelledby="newProjectTitle">
+                <div class="modal-head">
+                    <div>
+                        <div class="modal-eyebrow">Nouveau projet</div>
+                        <h3 class="modal-title" id="newProjectTitle">
+                            Créer un projet
+                        </h3>
+                        <p class="modal-subtitle">
+                            Crée une feuille de route - manuellement ou avec
+                            l'IA.
+                        </p>
+                    </div>
+                    <button class="modal-close" data-close="newProject">
+                        <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 3l6 6M9 3l-6 6"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Champs communs -->
+                    <div class="field">
+                        <label class="field-label"
+                            >Nom du projet
+                            <span style="color: var(--pink)">*</span></label
+                        >
+                        <input
+                            class="field-input"
+                            id="npName"
+                            placeholder="Ex. Lancer mon SaaS..."
+                        />
+                    </div>
+                    <div class="field">
+                        <label class="field-label"
+                            >Description (optionnelle)</label
+                        >
+                        <textarea
+                            class="field-textarea"
+                            id="npDescription"
+                            placeholder="Précise le contexte, les contraintes ou l'audience visée…"
+                            style="min-height: 60px"
+                        ></textarea>
+                    </div>
+
+                    <!-- Separateur visuel -->
+                    <div
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            margin: 4px 0;
+                        "
+                    >
+                        <div
+                            style="
+                                flex: 1;
+                                height: 1px;
+                                background: var(--border);
+                            "
+                        ></div>
+                        <span
+                            style="
+                                font-size: 10.5px;
+                                color: var(--fg-faint);
+                                font-family: var(--font-mono);
+                                letter-spacing: 0.06em;
+                            "
+                            >GÉNÉRATION IA</span
+                        >
+                        <div
+                            style="
+                                flex: 1;
+                                height: 1px;
+                                background: var(--border);
+                            "
+                        ></div>
+                    </div>
+
+                    <!-- Section IA (masquee si aucun provider) -->
+                    <div id="npAiSection">
+                        <div class="field" style="margin-bottom: 10px">
+                            <label class="field-label">Objectif</label>
+                            <textarea
+                                class="field-textarea"
+                                id="npObjective"
+                                placeholder="Décris l'objectif que tu veux atteindre…"
+                                style="min-height: 80px"
+                            ></textarea>
+                        </div>
+                        <div class="field">
+                            <label class="field-label">Modèle à utiliser</label>
+                            <div class="model-chips" id="npModelChips"></div>
+                        </div>
+                    </div>
+
+                    <!-- Hint si aucun provider configure -->
+                    <div
+                        id="npNoProviderHint"
+                        style="
+                            display: none;
+                            background: rgba(251, 191, 36, 0.06);
+                            border: 1px solid rgba(251, 191, 36, 0.2);
+                            border-radius: var(--r-md);
+                            padding: 10px 14px;
+                            font-size: 12px;
+                            color: var(--fg-dim);
+                            line-height: 1.5;
+                        "
+                    >
+                        <svg
+                            viewBox="0 0 14 14"
+                            fill="none"
+                            width="13"
+                            height="13"
+                            style="
+                                display: inline;
+                                vertical-align: middle;
+                                margin-right: 6px;
+                                color: var(--amber);
+                            "
+                        >
+                            <path
+                                d="M7 1l6 11H1L7 1z"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linejoin="round"
+                            />
+                            <path
+                                d="M7 5v4M7 11v0.5"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                        Configure au moins un fournisseur IA dans les paramètres
+                        pour générer un projet.
+                    </div>
+                </div>
+                <div class="modal-foot">
+                    <span class="modal-foot-info" id="npFootInfo">
+                        Crée un projet vide, ou laisse l'IA générer une roadmap.
+                    </span>
+                    <div class="modal-foot-actions">
+                        <button
+                            class="btn btn-bordered"
+                            data-close="newProject"
+                        >
+                            Annuler
+                        </button>
+                        <button class="btn btn-bordered" id="npCreateManual">
+                            <svg
+                                width="11"
+                                height="11"
+                                viewBox="0 0 12 12"
+                                fill="none"
+                            >
+                                <path
+                                    d="M2 10h8M6 2v6M3 5l3-3 3 3"
+                                    stroke="currentColor"
+                                    stroke-width="1.4"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+                            </svg>
+                            Créer vide
+                        </button>
+                        <button class="btn btn-primary" id="npGenerate">
+                            <svg
+                                width="11"
+                                height="11"
+                                viewBox="0 0 12 12"
+                                fill="none"
+                            >
+                                <path
+                                    d="M6 1l1.2 3.6L11 6l-3.8 1.4L6 11l-1.2-3.6L1 6l3.8-1.4L6 1z"
+                                    fill="currentColor"
+                                />
+                            </svg>
+                            Générer la roadmap
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop" id="previewBackdrop">
+            <div class="modal large" role="dialog">
+                <div class="modal-head">
+                    <div>
+                        <div class="modal-eyebrow">Previsualisation IA</div>
+                        <h3 class="modal-title" id="previewTitle">
+                            Roadmap proposee
+                        </h3>
+                        <p class="modal-subtitle" id="previewSubtitle">
+                            Edite, supprime ou ajoute des taches avant
+                            d'appliquer. Rien n'est cree tant que tu ne valides
+                            pas.
+                        </p>
+                    </div>
+                    <button class="modal-close" data-close="preview">
+                        <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 3l6 6M9 3l-6 6"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body" id="previewBody"></div>
+                <div class="modal-foot">
+                    <span class="modal-foot-info" id="previewFootInfo"
+                        >- taches proposees</span
+                    >
+                    <div class="modal-foot-actions">
+                        <button class="btn btn-danger" data-close="preview">
+                            Rejeter
+                        </button>
+                        <button class="btn btn-primary" id="previewApply">
+                            Appliquer la roadmap
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop" id="reexploreBackdrop">
+            <div class="modal" role="dialog">
+                <div class="modal-head">
+                    <div>
+                        <div class="modal-eyebrow">Reexamen IA</div>
+                        <h3 class="modal-title" id="reexploreTitle">
+                            Enrichissement propose
+                        </h3>
+                        <p class="modal-subtitle">
+                            Ajuste les modifications proposees avant qu'elles ne
+                            soient appliquees a la tache.
+                        </p>
+                    </div>
+                    <button class="modal-close" data-close="reexplore">
+                        <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 3l6 6M9 3l-6 6"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body" id="reexploreBody"></div>
+                <div class="modal-foot">
+                    <span class="modal-foot-info"
+                        >L'IA propose des revisions - tu decides.</span
+                    >
+                    <div class="modal-foot-actions">
+                        <button class="btn btn-danger" data-close="reexplore">
+                            Rejeter
+                        </button>
+                        <button class="btn btn-primary" id="reexploreApply">
+                            Appliquer les changements
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Popover des paramètres rapides -->
+        <div
+            class="popover-backdrop"
+            id="quickSettingsBackdrop"
+            style="display: none"
+        ></div>
+        <div class="popover" id="quickSettingsPopover">
+            <div class="popover-header">
+                <div class="popover-identity" id="popoverIdentity">
+                    <span
+                        class="popover-title"
+                        id="popoverTitle"
+                        data-i18n="quickSettingsTitle"
+                        >Paramètres rapides</span
+                    >
+                    <span
+                        class="popover-subtitle"
+                        id="popoverSubtitle"
+                        data-i18n="cloudNotConnected"
+                        style="display: none"
+                        >Non connecté</span
+                    >
+                </div>
+                <button class="popover-close" id="closeQuickSettings">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path
+                            d="M3 3l6 6M9 3l-6 6"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                </button>
+            </div>
+            <div class="popover-body">
+                <button class="popover-btn" id="quickImportBtn">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path
+                            d="M6 8V2M3 5l3 3 3-3M1.5 10h9"
+                            stroke="currentColor"
+                            stroke-width="1.4"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span data-i18n="importProject">Importer projet</span>
+                </button>
+                <button
+                    class="popover-btn"
+                    id="quickExportBtn"
+                    style="display: none"
+                >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path
+                            d="M6 2v8M3 5l3-3 3 3M1.5 10h9"
+                            stroke="currentColor"
+                            stroke-width="1.4"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span data-i18n="exportProject">Exporter projet</span>
+                </button>
+                <button
+                    class="popover-btn"
+                    id="quickExportAllBtn"
+                    style="display: none"
+                >
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path
+                            d="M2 4h8M2 6h8M2 8h8M2 2h8"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linecap="round"
+                        />
+                    </svg>
+                    <span data-i18n="exportAllProjects"
+                        >Exporter tous les projets</span
+                    >
+                </button>
+                <button class="popover-btn" id="configureLLMsBtn">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                        <path
+                            d="M8 2.5a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H7v1.5a.5.5 0 0 1-.5.5h-.5a.5.5 0 0 1-.5-.5V4H4a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 .5-.5h1.5V1a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 .5.5v1.5H8zM2 8.5a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 .5.5v.5h1.5a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H3.5v1.5a.5.5 0 0 1-.5.5H2.5a.5.5 0 0 1-.5-.5V10H.5a.5.5 0 0 1-.5-.5V9a.5.5 0 0 1 .5-.5H2v-1zM10 8.5a.5.5 0 0 1 .5-.5h.5a.5.5 0 0 1 .5.5v.5h1.5a.5.5 0 0 1 .5.5v.5a.5.5 0 0 1-.5.5H11.5v1.5a.5.5 0 0 1-.5.5h-.5a.5.5 0 0 1-.5-.5V10H8.5a.5.5 0 0 1-.5-.5V9a.5.5 0 0 1 .5-.5H10v-1z"
+                            stroke="currentColor"
+                            stroke-width="1.1"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span data-i18n="configureLLMs">Configurer LLMs</span>
+                </button>
+                <div class="popover-divider"></div>
+                <button class="popover-btn" id="cloudUploadBtn">
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                        <path
+                            d="M3.5 9.5a2.8 2.8 0 0 1-.5-5.55A4 4 0 0 1 10.7 4.5h.05a2.5 2.5 0 0 1 .25 5"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M7 7v5.5M5 9l2-2 2 2"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span data-i18n="cloudUpload">Synchroniser ↑</span>
+                </button>
+                <button class="popover-btn" id="cloudDownloadBtn">
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                        <path
+                            d="M3.5 9.5a2.8 2.8 0 0 1-.5-5.55A4 4 0 0 1 10.7 4.5h.05a2.5 2.5 0 0 1 .25 5"
+                            stroke="currentColor"
+                            stroke-width="1.2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M7 12.5V7M5 10.5l2 2 2-2"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span data-i18n="cloudDownload">Synchroniser ↓</span>
+                </button>
+                <div class="popover-divider"></div>
+                <button class="popover-btn popover-btn-auth" id="cloudAuthBtn">
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
+                        <path
+                            d="M9 4V3a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h3a2 2 0 0 0 2-2v-1"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <path
+                            d="M12 7H6m6 0L9.5 4.5M12 7l-2.5 2.5"
+                            stroke="currentColor"
+                            stroke-width="1.3"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                    <span id="cloudAuthBtnLabel" data-i18n="cloudAuthLoginBtn"
+                        >Se connecter</span
+                    >
+                </button>
+            </div>
+        </div>
+
+        <div class="modal-backdrop" id="settingsBackdrop">
+            <div class="modal" role="dialog">
+                <div class="modal-head">
+                    <div>
+                        <div class="modal-eyebrow">Parametres</div>
+                        <h3 class="modal-title">Fournisseurs IA</h3>
+                        <p class="modal-subtitle">
+                            Saisis ta cle API et l'identifiant du modele pour
+                            chaque fournisseur. Les cles sont chiffrees
+                            (AES-GCM) et stockees localement.
+                        </p>
+                    </div>
+                    <button class="modal-close" data-close="settings">
+                        <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 3l6 6M9 3l-6 6"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-warning">
+                        <svg viewBox="0 0 14 14" fill="none">
+                            <path
+                                d="M7 1l6 11H1L7 1z"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linejoin="round"
+                            />
+                            <path
+                                d="M7 5v4M7 11v0.5"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                        <span
+                            ><b>Securite :</b> les cles sont chiffrees avant
+                            stockage local, mais le code source contient le sel
+                            et la passphrase. Cette protection est de
+                            l'<b>obfuscation</b>. Ne pas utiliser sur un
+                            appareil partage sans modifier
+                            <code
+                                style="
+                                    font-family: var(--font-mono);
+                                    font-size: 11px;
+                                "
+                                >ENCRYPTION_SALT</code
+                            >
+                            et
+                            <code
+                                style="
+                                    font-family: var(--font-mono);
+                                    font-size: 11px;
+                                "
+                                >ENCRYPTION_PASSPHRASE</code
+                            >
+                            dans
+                            <code
+                                style="
+                                    font-family: var(--font-mono);
+                                    font-size: 11px;
+                                "
+                                >crypto.js</code
+                            ></span
+                        >
+                    </div>
+                    <div
+                        class="provider-card"
+                        id="provider-anthropic"
+                        data-provider="anthropic"
+                    >
+                        <div class="provider-head">
+                            <span
+                                class="provider-mark"
+                                data-provider="anthropic"
+                                ><svg viewBox="0 0 14 14" fill="none">
+                                    <path
+                                        d="M2 11L5.5 3l3.5 8M2 11h2l1-2.5h3L9 11h2M5 8.5h3"
+                                        stroke="currentColor"
+                                        stroke-width="1.3"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    /></svg
+                            ></span>
+                            <span class="provider-name"
+                                >Anthropic - Claude</span
+                            >
+                            <span class="provider-status" data-status
+                                >Non configure</span
+                            >
+                        </div>
+                        <div class="provider-fields">
+                            <div class="field">
+                                <label class="field-label"
+                                    >Identifiant du modele</label
+                                ><input
+                                    class="field-input"
+                                    data-field="model"
+                                    placeholder="claude-opus-4-7"
+                                />
+                            </div>
+                            <div class="field">
+                                <label class="field-label">Cle API</label>
+                                <div class="key-input-wrap">
+                                    <input
+                                        class="field-input"
+                                        type="password"
+                                        data-field="apiKey"
+                                        placeholder="sk-ant-..."
+                                    /><button
+                                        class="key-toggle"
+                                        data-toggle-key
+                                    >
+                                        <svg viewBox="0 0 14 14" fill="none">
+                                            <path
+                                                d="M1 7s2.4-4 6-4 6 4 6 4-2.4 4-6 4-6-4-6-4z"
+                                                stroke="currentColor"
+                                                stroke-width="1.1"
+                                            />
+                                            <circle
+                                                cx="7"
+                                                cy="7"
+                                                r="1.6"
+                                                stroke="currentColor"
+                                                stroke-width="1.1"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="provider-actions">
+                            <button class="btn btn-bordered" data-test>
+                                Tester</button
+                            ><span
+                                style="
+                                    font-family: var(--font-mono);
+                                    font-size: 10.5px;
+                                    color: var(--fg-faint);
+                                    align-self: center;
+                                "
+                                >claude-opus-4-7 - claude-sonnet-4-6 -
+                                claude-haiku-4-5</span
+                            >
+                        </div>
+                    </div>
+                    <div
+                        class="provider-card"
+                        id="provider-openai"
+                        data-provider="openai"
+                    >
+                        <div class="provider-head">
+                            <span class="provider-mark" data-provider="openai"
+                                ><svg viewBox="0 0 14 14" fill="none">
+                                    <circle
+                                        cx="7"
+                                        cy="7"
+                                        r="5.5"
+                                        stroke="currentColor"
+                                        stroke-width="1.2"
+                                    />
+                                    <path
+                                        d="M7 4v6M4 7h6"
+                                        stroke="currentColor"
+                                        stroke-width="1.2"
+                                        stroke-linecap="round"
+                                    /></svg
+                            ></span>
+                            <span class="provider-name">OpenAI - GPT</span>
+                            <span class="provider-status" data-status
+                                >Non configure</span
+                            >
+                        </div>
+                        <div class="provider-fields">
+                            <div class="field">
+                                <label class="field-label"
+                                    >Identifiant du modele</label
+                                ><input
+                                    class="field-input"
+                                    data-field="model"
+                                    placeholder="gpt-5.4"
+                                />
+                            </div>
+                            <div class="field">
+                                <label class="field-label">Cle API</label>
+                                <div class="key-input-wrap">
+                                    <input
+                                        class="field-input"
+                                        type="password"
+                                        data-field="apiKey"
+                                        placeholder="sk-..."
+                                    /><button
+                                        class="key-toggle"
+                                        data-toggle-key
+                                    >
+                                        <svg viewBox="0 0 14 14" fill="none">
+                                            <path
+                                                d="M1 7s2.4-4 6-4 6 4 6 4-2.4 4-6 4-6-4-6-4z"
+                                                stroke="currentColor"
+                                                stroke-width="1.1"
+                                            />
+                                            <circle
+                                                cx="7"
+                                                cy="7"
+                                                r="1.6"
+                                                stroke="currentColor"
+                                                stroke-width="1.1"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="provider-actions">
+                            <button class="btn btn-bordered" data-test>
+                                Tester</button
+                            ><span
+                                style="
+                                    font-family: var(--font-mono);
+                                    font-size: 10.5px;
+                                    color: var(--fg-faint);
+                                    align-self: center;
+                                "
+                                >gpt-5.5 - gpt-5.4 - gpt-5.4-mini - gpt-5</span
+                            >
+                        </div>
+                    </div>
+                    <div
+                        class="provider-card"
+                        id="provider-deepseek"
+                        data-provider="deepseek"
+                    >
+                        <div class="provider-head">
+                            <span class="provider-mark" data-provider="deepseek"
+                                ><svg viewBox="0 0 14 14" fill="none">
+                                    <path
+                                        d="M2 7l3-3 3 3-3 3-3-3zM8 7l3-3 3 3-3 3-3-3z"
+                                        stroke="currentColor"
+                                        stroke-width="1.2"
+                                        stroke-linejoin="round"
+                                    /></svg
+                            ></span>
+                            <span class="provider-name">DeepSeek</span>
+                            <span class="provider-status" data-status
+                                >Non configure</span
+                            >
+                        </div>
+                        <div class="provider-fields">
+                            <div class="field">
+                                <label class="field-label"
+                                    >Identifiant du modele</label
+                                ><input
+                                    class="field-input"
+                                    data-field="model"
+                                    placeholder="deepseek-v4-pro"
+                                />
+                            </div>
+                            <div class="field">
+                                <label class="field-label">Cle API</label>
+                                <div class="key-input-wrap">
+                                    <input
+                                        class="field-input"
+                                        type="password"
+                                        data-field="apiKey"
+                                        placeholder="sk-..."
+                                    /><button
+                                        class="key-toggle"
+                                        data-toggle-key
+                                    >
+                                        <svg viewBox="0 0 14 14" fill="none">
+                                            <path
+                                                d="M1 7s2.4-4 6-4 6 4 6 4-2.4 4-6 4-6-4-6-4z"
+                                                stroke="currentColor"
+                                                stroke-width="1.1"
+                                            />
+                                            <circle
+                                                cx="7"
+                                                cy="7"
+                                                r="1.6"
+                                                stroke="currentColor"
+                                                stroke-width="1.1"
+                                            />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="provider-actions">
+                            <button class="btn btn-bordered" data-test>
+                                Tester</button
+                            ><span
+                                style="
+                                    font-family: var(--font-mono);
+                                    font-size: 10.5px;
+                                    color: var(--fg-faint);
+                                    align-self: center;
+                                "
+                                >deepseek-v4-pro - deepseek-v4-flash</span
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-foot">
+                    <span class="modal-foot-info"
+                        >Tes cles ne quittent jamais ton navigateur, sauf vers
+                        l'API du fournisseur.</span
+                    >
+                    <div class="modal-foot-actions">
+                        <button class="btn btn-bordered" data-close="settings">
+                            Fermer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop" id="confirmBackdrop">
+            <div class="modal" role="dialog" aria-labelledby="confirmTitle">
+                <div class="modal-head">
+                    <h3 id="confirmTitle" class="modal-title">Confirmation</h3>
+                    <button class="modal-close" data-close="confirm">
+                        <svg viewBox="0 0 12 12" fill="none">
+                            <path
+                                d="M3 3l6 6M9 3l-6 6"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmMessage" class="modal-message">
+                        Êtes-vous sûr de vouloir effectuer cette action ?
+                    </p>
+                </div>
+                <div class="modal-foot">
+                    <div class="modal-foot-actions">
+                        <button id="confirmCancelBtn" class="btn btn-bordered">
+                            Annuler
+                        </button>
+                        <button id="confirmConfirmBtn" class="btn btn-danger">
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop" id="cloudAuthBackdrop">
+            <div class="modal" role="dialog" aria-labelledby="cloudAuthTitle">
+                <div class="modal-head">
+                    <div>
+                        <div class="modal-eyebrow" data-i18n="cloudAuthEyebrow">
+                            Synchronisation cloud
+                        </div>
+                        <h3 id="cloudAuthTitle" class="modal-title">
+                            Connexion
+                        </h3>
+                        <p id="cloudAuthSubtitle" class="modal-subtitle">
+                            Connecte-toi pour synchroniser tes projets avec le
+                            cloud.
+                        </p>
+                    </div>
+                    <button class="modal-close" data-close="cloudAuth">
+                        <svg
+                            width="13"
+                            height="13"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                        >
+                            <path
+                                d="M3 3l6 6M9 3l-6 6"
+                                stroke="currentColor"
+                                stroke-width="1.2"
+                                stroke-linecap="round"
+                            />
+                        </svg>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-mode="login">
+                            Connexion
+                        </button>
+                        <button class="auth-tab" data-mode="signup">
+                            Inscription
+                        </button>
+                    </div>
+                    <div
+                        class="field auth-name-row"
+                        id="cloudAuthNamesField"
+                        style="display: none"
+                    >
+                        <div class="auth-name-col">
+                            <label class="field-label" for="cloudAuthFirstName"
+                                >Prénom</label
+                            >
+                            <input
+                                class="field-input"
+                                id="cloudAuthFirstName"
+                                type="text"
+                                autocomplete="given-name"
+                                placeholder="Jean"
+                            />
+                        </div>
+                        <div class="auth-name-col">
+                            <label class="field-label" for="cloudAuthLastName"
+                                >Nom</label
+                            >
+                            <input
+                                class="field-input"
+                                id="cloudAuthLastName"
+                                type="text"
+                                autocomplete="family-name"
+                                placeholder="Dupont"
+                            />
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="cloudAuthEmail"
+                            >Email</label
+                        >
+                        <input
+                            class="field-input"
+                            id="cloudAuthEmail"
+                            type="email"
+                            autocomplete="email"
+                            placeholder="vous@exemple.com"
+                        />
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="cloudAuthPassword"
+                            >Mot de passe</label
+                        >
+                        <input
+                            class="field-input"
+                            id="cloudAuthPassword"
+                            type="password"
+                            autocomplete="current-password"
+                            placeholder="••••••••"
+                        />
+                    </div>
+                    <div
+                        class="field"
+                        id="cloudAuthPasswordConfirmField"
+                        style="display: none"
+                    >
+                        <label
+                            class="field-label"
+                            for="cloudAuthPasswordConfirm"
+                            >Confirmer le mot de passe</label
+                        >
+                        <input
+                            class="field-input"
+                            id="cloudAuthPasswordConfirm"
+                            type="password"
+                            autocomplete="new-password"
+                            placeholder="••••••••"
+                        />
+                    </div>
+                    <div
+                        class="cloud-auth-error"
+                        id="cloudAuthError"
+                        style="display: none"
+                    ></div>
+                </div>
+                <div class="modal-foot" style="justify-content: flex-end">
+                    <div class="modal-foot-actions">
+                        <button
+                            id="cloudAuthCancel"
+                            class="btn btn-bordered"
+                            data-close="cloudAuth"
+                        >
+                            Annuler
+                        </button>
+                        <button id="cloudAuthSubmit" class="btn btn-primary">
+                            Se connecter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="toast" id="toast">
+            <span class="toast-icon"
+                ><svg viewBox="0 0 12 12" fill="none">
+                    <path
+                        d="M10 3L4.5 8.5L2 6"
+                        stroke="currentColor"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    /></svg
+            ></span>
+            <span id="toastMsg">Action terminee</span>
+        </div>
+
+        <div class="modal-backdrop" id="loadingBackdrop">
+            <div
+                class="modal"
+                role="dialog"
+                style="max-height: 300px; width: 480px"
+            >
+                <div
+                    class="modal-head"
+                    style="justify-content: center; padding-bottom: 16px"
+                >
+                    <h3 class="modal-title" id="loadingTitle">
+                        Génération de la roadmap
+                    </h3>
+                </div>
+                <div
+                    class="modal-body"
+                    style="
+                        position: relative;
+                        min-height: 200px;
+                        overflow: hidden;
+                        padding: 30px 24px;
+                    "
+                >
+                    <div class="modal-loading-overlay" style="display: none">
+                        <div class="loading-shell">
+                            <div class="loading-orb"></div>
+                            <h3 class="loading-title" id="loadingTitleText">
+                                Génération de la roadmap
+                            </h3>
+                            <p class="loading-text" id="loadingText">
+                                L'IA décompose votre objectif en étapes...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="js/state.js"></script>
+        <script src="js/crypto.js"></script>
+        <script src="js/ai.js"></script>
+        <script src="js/i18n.js"></script>
+        <script src="js/projects.js"></script>
+        <script src="js/edges.js"></script>
+        <script src="js/events.js"></script>
+        <script src="js/notes.js"></script>
+        <script src="js/nodes.js"></script>
+        <script src="js/modals.js"></script>
+        <script src="js/window-controls.js"></script>
+        <script src="js/quick-settings.js"></script>
+        <script src="js/cloud-sync.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

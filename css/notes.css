@@ -1,0 +1,644 @@
+/* ─── PROJECT NOTES — FAB ─────────────────────────────────────────────
+   Same visual language as .add-node-fab but anchored top-left, just
+   below the topbar. Visible only when a project is open. */
+
+/* Confirm modal — always on top of other modals so it can be used as
+   a confirmation step from inside another open modal (e.g. delete a
+   note from the notes modal). */
+#confirmBackdrop {
+    z-index: 500;
+}
+
+.notes-fab {
+    position: fixed;
+    top: 68px; /* topbar (52) + 16px breathing room */
+    left: 16px;
+    z-index: 149;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    color: var(--fg-muted);
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 14px 8px 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition:
+        opacity 0.3s,
+        transform 0.3s,
+        background 0.15s,
+        color 0.15s,
+        border-color 0.15s;
+    cursor: pointer;
+}
+.notes-fab.visible {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+.notes-fab:hover {
+    background: var(--bg-hover);
+    color: var(--fg);
+    border-color: var(--border-vivid);
+}
+.notes-fab .notes-fab-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--violet);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.notes-fab .notes-fab-icon svg {
+    width: 14px;
+    height: 14px;
+    color: #fff;
+}
+.notes-fab .notes-fab-label {
+    line-height: 1;
+}
+
+/* ─── NOTES MODAL — Roundcube-style 2-pane layout ──────────────────── */
+.modal.notes-mode {
+    width: 96vw;
+    max-width: 1100px;
+    height: 86vh;
+    max-height: 86vh;
+}
+.modal.notes-mode .modal-body {
+    overflow: hidden;
+    padding: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+}
+
+.notes-layout {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    width: 100%;
+}
+
+/* Left column: list of sheets */
+.notes-sidebar {
+    width: 300px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.01);
+    min-height: 0;
+}
+.notes-sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.notes-sidebar-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--fg-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.notes-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(167, 139, 250, 0.1);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    color: var(--violet);
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: var(--r-sm);
+    transition:
+        background 0.15s,
+        border-color 0.15s;
+    cursor: pointer;
+}
+.notes-add-btn:hover {
+    background: rgba(167, 139, 250, 0.18);
+    border-color: rgba(167, 139, 250, 0.5);
+}
+.notes-add-btn svg {
+    width: 10px;
+    height: 10px;
+}
+.notes-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 0;
+}
+.notes-list-empty {
+    padding: 32px 16px;
+    text-align: center;
+    color: var(--fg-faint);
+    font-size: 12px;
+    line-height: 1.5;
+    font-style: italic;
+}
+.notes-list-empty strong {
+    display: block;
+    font-style: normal;
+    color: var(--fg-dim);
+    font-size: 12.5px;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+.notes-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: var(--r-sm);
+    border: 1px solid transparent;
+    background: var(--bg-elevated);
+    cursor: pointer;
+    transition:
+        background 0.15s,
+        border-color 0.15s;
+    position: relative;
+}
+.notes-list-item:hover {
+    background: var(--bg-hover);
+    border-color: var(--border);
+}
+.notes-list-item.active {
+    background: rgba(167, 139, 250, 0.08);
+    border-color: rgba(167, 139, 250, 0.4);
+}
+.notes-list-item-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.notes-list-item-title {
+    flex: 1;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--fg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.notes-list-item-title.untitled {
+    color: var(--fg-faint);
+    font-style: italic;
+}
+.notes-list-item-type {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--bg-3);
+    color: var(--fg-faint);
+    text-transform: lowercase;
+}
+.notes-list-item-type.text {
+    background: rgba(94, 234, 212, 0.1);
+    color: var(--cyan);
+}
+.notes-list-item-type.handwritten {
+    background: rgba(167, 139, 250, 0.12);
+    color: var(--violet);
+}
+.notes-list-item-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--fg-faint);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+.notes-list-item-snippet {
+    font-size: 11px;
+    color: var(--fg-dim);
+    line-height: 1.45;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    word-break: break-word;
+}
+.notes-list-item-actions {
+    position: absolute;
+    top: 40px;
+    right: 8px;
+    display: none;
+    gap: 2px;
+}
+.notes-list-item:hover .notes-list-item-actions,
+.notes-list-item.active .notes-list-item-actions {
+    display: flex;
+}
+.notes-list-item-action {
+    width: 22px;
+    height: 22px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--fg-faint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.15s,
+        color 0.15s;
+    cursor: pointer;
+}
+.notes-list-item-action:hover {
+    color: var(--fg);
+    background: var(--bg-hover);
+}
+.notes-list-item-action.danger:hover {
+    color: var(--pink);
+    background: rgba(255, 107, 157, 0.12);
+    border-color: rgba(255, 107, 157, 0.3);
+}
+.notes-list-item-action svg {
+    width: 11px;
+    height: 11px;
+}
+.notes-sidebar-footer {
+    padding: 10px 16px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--fg-faint);
+}
+
+/* Right column: preview */
+.notes-preview {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.005);
+    min-height: 0;
+}
+.notes-preview-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-shrink: 0;
+}
+.notes-preview-meta {
+    flex: 1;
+    min-width: 0;
+}
+.notes-preview-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fg);
+    margin: 0 0 4px;
+    line-height: 1.3;
+    word-break: break-word;
+}
+.notes-preview-title.untitled {
+    color: var(--fg-faint);
+    font-style: italic;
+    font-weight: 500;
+}
+.notes-preview-info {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    color: var(--fg-faint);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.notes-preview-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.notes-preview-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    color: var(--fg-muted);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: var(--r-sm);
+    transition:
+        background 0.15s,
+        color 0.15s,
+        border-color 0.15s;
+    cursor: pointer;
+}
+.notes-preview-action:hover {
+    background: var(--bg-hover);
+    color: var(--fg);
+    border-color: var(--border-vivid);
+}
+.notes-preview-action.primary {
+    background: var(--violet);
+    border-color: var(--violet);
+    color: #fff;
+}
+.notes-preview-action.primary:hover {
+    filter: brightness(1.1);
+}
+.notes-preview-action svg {
+    width: 12px;
+    height: 12px;
+}
+
+.notes-preview-body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 20px 24px;
+    min-height: 0;
+}
+.notes-preview-text {
+    font-size: 13.5px;
+    color: var(--fg);
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-family: var(--font-sans);
+}
+.notes-preview-text.empty {
+    color: var(--fg-faint);
+    font-style: italic;
+}
+.notes-preview-handwritten {
+    background: #0d0d11;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    padding: 12px;
+    overflow: auto;
+    max-height: 100%;
+}
+.notes-preview-handwritten img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--r-sm);
+}
+.notes-preview-empty {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--fg-faint);
+}
+.notes-preview-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--fg-dim);
+}
+.notes-preview-empty-icon svg {
+    width: 26px;
+    height: 26px;
+}
+.notes-preview-empty h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg-dim);
+    margin: 0;
+}
+.notes-preview-empty p {
+    font-size: 12.5px;
+    color: var(--fg-faint);
+    margin: 0;
+    max-width: 320px;
+    line-height: 1.5;
+}
+
+/* ─── FULLSCREEN EDITOR ───────────────────────────────────────────────
+   100vw × 100vh overlay. Truly fills the viewport. Used both when
+   creating and when editing a sheet. */
+.note-editor-fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    background: var(--bg);
+    display: none;
+    flex-direction: column;
+}
+.note-editor-fullscreen.open {
+    display: flex;
+}
+/* When the fullscreen editor is open, the notes modal stays mounted
+   underneath but the dimming backdrop is hidden so the editor reads as
+   a clean, full-bleed surface (mirrors the .nb-fullscreen-active pattern). */
+body.note-editor-active .modal-backdrop {
+    background: transparent;
+    backdrop-filter: none;
+}
+
+.note-editor-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.85);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+}
+.note-editor-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--fg-faint);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+.note-editor-title-input {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--fg);
+    font-family: var(--font-sans);
+    padding: 4px 8px;
+    border-radius: var(--r-sm);
+    transition: background 0.15s;
+}
+.note-editor-title-input:hover {
+    background: var(--bg-hover);
+}
+.note-editor-title-input:focus {
+    background: var(--bg-hover);
+}
+.note-editor-title-input::placeholder {
+    color: var(--fg-faint);
+    font-weight: 500;
+}
+.note-editor-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Tab bar between header and content */
+.note-editor-tabs {
+    display: flex;
+    gap: 0;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0, 0, 0, 0.6);
+    flex-shrink: 0;
+}
+.note-editor-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--fg-dim);
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition:
+        color 0.15s,
+        border-color 0.15s;
+    margin-bottom: -1px;
+    font-family: inherit;
+}
+.note-editor-tab:hover {
+    color: var(--fg);
+}
+.note-editor-tab.active {
+    color: var(--fg);
+    border-bottom-color: var(--violet);
+}
+
+/* Body fills remaining space */
+.note-editor-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: #0d0d11;
+}
+
+/* Text tab — a fullscreen textarea */
+.note-editor-text {
+    display: none;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+.note-editor-text.active {
+    display: flex;
+}
+.note-editor-textarea {
+    flex: 1 1 auto;
+    width: 100%;
+    background: #0d0d11;
+    border: none;
+    outline: none;
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 14.5px;
+    line-height: 1.7;
+    padding: 32px 48px;
+    resize: none;
+}
+.note-editor-textarea::placeholder {
+    color: var(--fg-faint);
+}
+
+/* Handwritten tab — reuses the .notebook-* visual language but at
+   true fullscreen (no wrapper border / radius). */
+.note-editor-handwritten {
+    display: none;
+    flex: 1 1 auto;
+    min-height: 0;
+    flex-direction: column;
+}
+.note-editor-handwritten.active {
+    display: flex;
+}
+.note-editor-handwritten .notebook-toolbar {
+    background: var(--bg-2);
+    border-bottom: 1px solid var(--border);
+}
+.note-editor-handwritten .notebook-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    background: #0d0d11;
+    overscroll-behavior: contain;
+}
+.note-editor-handwritten .notebook-paper {
+    position: relative;
+    background: #0d0d11;
+}
+.note-editor-handwritten .notebook-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    touch-action: none;
+    -ms-touch-action: none;
+    cursor: crosshair;
+    background: transparent;
+}
+.note-editor-handwritten .notebook-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 31px,
+        rgba(180, 200, 230, 0.1) 31px,
+        rgba(180, 200, 230, 0.1) 32px
+    );
+    background-size: 100% 32px;
+    background-position: 0 8px;
+}
+.note-editor-handwritten .notebook-margin {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 64px;
+    width: 1px;
+    background: rgba(167, 139, 250, 0.22);
+    pointer-events: none;
+}

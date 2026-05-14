@@ -1,0 +1,104 @@
+appId: com.naanocorp.planner
+productName: Sphere Planner
+directories:
+  output: dist
+  buildResources: assets
+
+files:
+  - "**/*"
+  - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
+  - "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}"
+  - "!**/node_modules/*.d.ts"
+  - "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}"
+  - "!.editorconfig"
+  - "!**/._*"
+  - "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}"
+  - "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}"
+  - "!**/{appveyor.yml,.travis.yml,circle.yml}"
+  - "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  icon: assets/icon.ico
+  publisherName: NaanoCorp
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: ${productName}
+  installerIcon: assets/icon.ico
+  uninstallerIcon: assets/icon.ico
+  installerHeaderIcon: assets/icon.ico
+  include: build/installer.nsh
+
+mac:
+  target: dmg
+  icon: assets/icon.icns
+  category: public.app-category.productivity
+  artifactName: ${productName}-${version}.${ext}
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+    - target: deb
+      arch:
+        - x64
+  icon: assets/fav-web-2.png
+  category: Utility
+  maintainer: NaanoCorp <contact@naanocorp.com>
+  synopsis: AI-powered project planning application
+  description: |
+    Sphere Planner is an AI-powered project planning application that helps you
+    create detailed roadmaps, manage tasks, and collaborate with your team.
+
+appImage:
+  license: LICENSE
+
+extraResources:
+  - from: assets/
+    to: assets/
+    filter:
+      - "**/*"
+
+asar: true
+asarUnpack:
+  - "**/*.node"
+  - "**/assets/**"
+
+npmRebuild: false
+buildDependenciesFromSource: false
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/
+
+publish: null
+
+afterSign: build/notarize.js
+
+extraMetadata:
+  main: main.js
+
+protocols:
+  - name: Sphere Planner
+    schemes:
+      - sphere-planner
+
+fileAssociations:
+  - ext: json
+    name: Sphere Project
+    role: Viewer
+    mimeType: application/json

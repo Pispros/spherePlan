@@ -1,0 +1,45 @@
+# SpherePlan
+
+> Application de bureau open-source (MIT) pour planifier des projets avec une visualisation en constellation pilotée par IA. Génère et explore des roadmaps, gère tâches, sous-tâches, dépendances, événements et notes (texte ou manuscrites). Disponible sur Windows, macOS et Linux. Édité par NaanoCorp (Montréal, Québec, Canada).
+
+SpherePlan est conçu pour les makers, freelances, étudiants et équipes produit qui veulent transformer une idée brute en feuille de route exploitable en quelques minutes. L'utilisateur décrit un objectif en langage naturel ; l'IA — Claude (Anthropic), GPT (OpenAI) ou un autre modèle compatible — produit une roadmap structurée que l'on peut éditer visuellement (drag-and-drop sur un canvas en constellation), enrichir d'événements et de notes, puis exporter/importer en JSON. Tout peut aussi être fait manuellement, sans jamais utiliser de LLM.
+
+Points-clés :
+
+- 100% local : les données vivent dans `localStorage` du navigateur (ou dans le profil Electron sur le bureau), aucun serveur tiers obligatoire.
+- Synchronisation cloud optionnelle via PocketBase (https://apw.naanocorp.com) : compte NaanoCorp gratuit, upload/download de tous les projets, sync projet par projet, gestion des conflits et orphelins.
+- IA optionnelle aussi : tout peut être fait manuellement (tâches, dépendances, notes), sans LLM.
+- Apportez votre propre clé d'API : Anthropic, OpenAI, et autres providers compatibles. Aucune marge cachée.
+- FR et EN intégrés (i18n complet, switcher dans la barre supérieure).
+- Notes manuscrites par tâche ET au niveau projet (cahier multi-feuilles type OneNote, support stylet).
+- Export/import JSON complet : projets, tâches, sous-tâches, événements, dépendances et notes — round-trip fidèle.
+- Licence MIT, développement ouvert.
+
+Mots-clés : planificateur de projet IA, AI project planner, roadmap generator, constellation visualization, gestion de projet open-source, alternative Notion AI, alternative Asana IA, planificateur Anthropic Claude, planificateur OpenAI GPT, application Electron, prise de notes manuscrites stylet, GTD, productivité, OKR, cloud sync PocketBase, synchronisation multi-appareils.
+
+## Produit
+
+- [SpherePlan — page produit](https://spherenote.space/page.md): Vue d'ensemble du produit, public cible, captures d'écran et différenciateurs.
+- [Fonctionnalités](https://spherenote.space/fonctionnalites.md): Liste détaillée — génération IA, constellation, tâches/sous-tâches/événements, notes multi-feuilles, dépendances, export/import JSON, multi-providers, cloud sync, FR/EN.
+- [Télécharger SpherePlan](https://spherenote.space/telecharger.md): Builds officiels Windows (NSIS), macOS (DMG, Intel + Apple Silicon) et Linux (AppImage, deb).
+
+## Documentation
+
+- [Démarrage rapide](https://spherenote.space/documentation/demarrage.md): Installer, configurer un provider IA, générer sa première roadmap.
+- [Configurer un provider IA](https://spherenote.space/documentation/providers.md): Anthropic Claude, OpenAI, etc. — où récupérer une clé d'API et comment la stocker localement.
+- [Synchronisation cloud](https://spherenote.space/documentation/cloud-sync.md): Créer un compte NaanoCorp, uploader/downloader ses projets, sync projet par projet, gérer les conflits.
+- [Format JSON d'export](https://spherenote.space/documentation/export-json.md): Schéma complet du format `exportVersion: 2` (projets, tâches, sous-tâches, événements, dépendances, notes).
+- [Notes manuscrites](https://spherenote.space/documentation/notes.md): Cahier multi-feuilles, prise de notes stylet, raccourcis clavier.
+
+## À propos
+
+- [À propos de NaanoCorp](https://naanocorp.com/about/): Studio basé à Montréal. Mission, valeurs, équipe.
+- [Conditions d'utilisation](https://naanocorp.com/terms-conditions): Conditions d'utilisation de la synchronisation cloud et des services NaanoCorp.
+- [Confidentialité](https://naanocorp.com/privacy/): Aucune donnée envoyée à NaanoCorp sans consentement. Les seules requêtes sortantes vont au provider IA choisi par l'utilisateur (avec sa propre clé) ou au backend PocketBase (si cloud sync activé).
+- [Contact](https://naanocorp.com/contact-us/): pispros@naanocorp.tech
+
+## Optional
+
+- [README technique](https://spherenote.space/readme.md): Stack technique, architecture, instructions de build (Electron + electron-builder).
+- [Journal des versions](https://spherenote.space/changelog.md): Historique des releases.
+- [Repo GitHub](https://github.com/naanocorp/naanoplan): Code source, issues, contributions.

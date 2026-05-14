@@ -1,0 +1,81 @@
+{
+  "name": "sphereplan",
+  "version": "1.0.0",
+  "description": "Sphere Project Planner - Application de planification de projet avec IA",
+  "homepage": "https://naanocorp.tech",
+  "main": "main.js",
+  "scripts": {
+    "icons": "electron-icon-builder --input=./assets/logot.png --output=./assets --flatten",
+    "start": "electron .",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "project",
+    "planner",
+    "roadmap",
+    "ai",
+    "planning"
+  ],
+  "author": {
+    "name": "NaanoCorp",
+    "email": "pispros@naanocorp.tech"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-icon-builder": "^2.0.1"
+  },
+  "build": {
+    "appId": "com.naanocorp.planner",
+    "productName": "SpherePlan",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.ico",
+      "publisherName": "NaanoCorp"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.productivity"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/fav-web-2.png",
+      "category": "Utility",
+      "maintainer": "NaanoCorp <pispros@naanocorp.tech>"
+    }
+  }
+}

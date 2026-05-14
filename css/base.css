@@ -1,0 +1,53 @@
+:root {
+    --bg: #000;
+    --bg-1: #060606;
+    --bg-2: #0a0a0a;
+    --bg-3: #111;
+    --bg-elevated: rgba(255, 255, 255, 0.02);
+    --bg-hover: rgba(255, 255, 255, 0.04);
+    --bg-active: rgba(255, 255, 255, 0.06);
+
+    --border: rgba(255, 255, 255, 0.06);
+    --border-strong: rgba(255, 255, 255, 0.1);
+    --border-vivid: rgba(255, 255, 255, 0.18);
+
+    --fg: #fff;
+    --fg-muted: rgba(255, 255, 255, 0.62);
+    --fg-dim: rgba(255, 255, 255, 0.42);
+    --fg-faint: rgba(255, 255, 255, 0.26);
+
+    --pink: #ff6b9d;
+    --pink-2: #ff4d8d;
+    --cyan: #5eead4;
+    --amber: #fbbf24;
+    --green: #4ade80;
+    --violet: #a78bfa;
+
+    --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Geist Mono", ui-monospace, monospace;
+
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 14px;
+    --r-xl: 20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: var(--bg); color: var(--fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01","cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+    letter-spacing: -0.005em;
+}
+button { font-family: inherit; cursor: pointer; }
+input, textarea, select { font-family: inherit; }
+
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--border-vivid); }

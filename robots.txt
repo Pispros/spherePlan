@@ -1,0 +1,93 @@
+# robots.txt — SpherePlan / NaanoCorp
+# Place this file at https://spherenote.space/robots.txt
+# Last reviewed: 2026-04-30
+
+# Default rules — allow all crawlers
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*?download=
+Crawl-delay: 1
+
+# Search engines — explicit allow (no surprises)
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+# AI training crawlers — allowed (SpherePlan wants to be discoverable)
+# Block these explicitly if you ever want to opt out of AI training.
+# Reference: https://platform.openai.com/docs/bots
+#            https://docs.anthropic.com/en/docs/agents-and-tools/web-crawling
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# AI retrieval / search crawlers — allowed (these power answers in
+# ChatGPT, Claude, Perplexity, etc. — visibility comes from these)
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: MistralAI-User
+Allow: /
+
+# Sitemap & LLM guide
+Sitemap: https://spherenote.space/sitemap.xml
+
+# LLM-friendly entry point (curated overview for AI assistants)
+# https://llmstxt.org/
+# https://spherenote.space/llms.txt
