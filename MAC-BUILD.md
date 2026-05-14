@@ -14,7 +14,7 @@ Guide rapide pour générer le `.dmg` de SpherePlan sur ton Mac.
 ### 1. Cloner le projet
 
 ```bash
-git clone <url-du-repo>
+git clone https://github.com/Pispros/spherePlan
 cd Planner
 ```
 
