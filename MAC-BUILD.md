@@ -21,7 +21,7 @@ cd SpherePlan
 ### 2. Installer les dépendances
 
 ```bash
-yarn install
+yarn
 ```
 
 ### 3. Builder
